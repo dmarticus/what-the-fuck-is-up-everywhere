@@ -1,0 +1,28 @@
+{
+  "name": "what-the-fuck-is-up",
+  "version": "1.0.0",
+  "description": "A browser-based captioned GIF maker inspired by the Denny's show.",
+  "private": true,
+  "scripts": {
+    "dev": "node scripts/prepare-media.mjs && vite --host 0.0.0.0",
+    "build": "node scripts/prepare-media.mjs && tsc && vite build",
+    "preview": "vite preview --host 0.0.0.0"
+  },
+  "keywords": [],
+  "author": "",
+  "type": "module",
+  "dependencies": {
+    "gifenc": "^1.0.3",
+    "react": "^19.3.0",
+    "react-dom": "^19.3.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.20.2",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "@vitejs/plugin-react": "^6.1.1",
+    "playwright": "^1.63.0",
+    "typescript": "^7.0.2",
+    "vite": "^8.3.0"
+  }
+}
