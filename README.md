@@ -1,8 +1,6 @@
 # what is up
 
-my glipglops
-
-A separate, static GIF maker inspired by the Denny's show.
+A separate, static GIF maker inspired by the [greatest video of all time](https://www.youtube.com/watch?v=xbPwaAFHDG8)
 Enter a place or group, preview an animated scene, and download a captioned GIF.
 
 ## Run
