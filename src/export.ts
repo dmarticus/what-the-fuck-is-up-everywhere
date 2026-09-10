@@ -11,7 +11,7 @@ function seekVideo(video: HTMLVideoElement, time: number, signal: AbortSignal): 
       signal.removeEventListener('abort', canceled)
     }
     const done = (): void => { cleanup(); resolve() }
-    const failed = (): void => { cleanup(); reject(new Error('The clip could not load. Choose an illustrated scene and try again.')) }
+    const failed = (): void => { cleanup(); reject(new Error('The clip could not load. Reload the video or choose another clip.')) }
     const canceled = (): void => { cleanup(); reject(new DOMException('Canceled', 'AbortError')) }
     const timeout = setTimeout(failed, 10000)
     video.addEventListener('seeked', done, { once: true })
@@ -27,9 +27,9 @@ export async function exportGif(options: RenderOptions, width: number, height: n
   canvas.width = width
   canvas.height = height
   const context = canvas.getContext('2d', { willReadFrequently: true })!
-  const video = !options.photo && options.scene === 'diner' ? options.video : null
-  const fps = 12
-  const frames = duration * fps
+  const video = !options.photo && (options.scene === 'diner' || options.useVideo) ? options.video : null
+  const fps = options.frameRate ?? 12
+  const frames = Math.max(1, Math.round(duration * fps))
   const exchange = (message: object, transfer: Transferable[] = []): Promise<{ bytes?: ArrayBuffer }> => new Promise((resolve, reject) => {
     if (signal.aborted) return reject(new DOMException('Canceled', 'AbortError'))
     const cleanup = (): void => {
@@ -55,7 +55,10 @@ export async function exportGif(options: RenderOptions, width: number, height: n
     for (let frame = 0; frame < frames; frame++) {
       if (signal.aborted) throw new DOMException('Canceled', 'AbortError')
       if (video && Number.isFinite(video.duration)) {
-        await seekVideo(video, ((frame / fps) * options.energy) % video.duration, signal)
+        const time = options.startTime !== undefined
+          ? Math.min(options.startTime + (frame / fps) * options.energy, Math.max(0, video.duration - 0.02))
+          : ((frame / fps) * options.energy) % video.duration
+        await seekVideo(video, time, signal)
       }
       drawScene(context, width, height, frame / fps, options)
       const pixels = context.getImageData(0, 0, width, height).data.buffer
