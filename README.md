@@ -34,14 +34,6 @@ Photos and captions stay in the browser. There are no accounts, uploads, or anal
 Captions in shared links use the URL fragment, which is not sent to the static host.
 Google Fonts is the only external browser request; system fonts are used if it is blocked.
 
-## Source clip
-
-The clip comes from the [Imgflip template supplied for this project](https://imgflip.com/memetemplate/477170333/Dennys).
-The app links to it and to the [original video](https://www.youtube.com/watch?v=9t1aUWlT1TI).
-The startup and build scripts download that one fixed source to `public/media/original.mp4`.
-The clip is excluded from version control. No third-party media ownership is claimed.
-If the download fails, the app uses an illustrated diner.
-To omit it, remove the media preparation step from the package scripts and remove the local clip.
 
 ## Implementation
 
@@ -50,8 +42,3 @@ React and TypeScript run on Vite. Canvas draws both the preview and export frame
 Users can cancel an export. A failed export leaves the editor available for retry.
 All uploaded images stay local. Inputs accept at most 60 characters; photos are limited to 10 MB and 24 megapixels.
 The app respects reduced-motion settings for the preview. GIF exports contain motion and have no sound.
-
-## Scope
-
-This project is not part of the PostHog application and uses no PostHog project data.
-It requires no API keys, backend, or paid services.
