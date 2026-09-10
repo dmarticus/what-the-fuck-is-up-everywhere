@@ -1,0 +1,4 @@
+node_modules/
+dist/
+public/media/original.mp4
+.DS_Store
