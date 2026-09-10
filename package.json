@@ -4,15 +4,19 @@
   "description": "A browser-based captioned GIF maker inspired by the Denny's show.",
   "private": true,
   "scripts": {
-    "dev": "node scripts/prepare-media.mjs && vite --host 0.0.0.0",
+    "dev": "node scripts/prepare-media.mjs && node scripts/dev.mjs",
     "build": "node scripts/prepare-media.mjs && tsc && vite build",
-    "preview": "vite preview --host 0.0.0.0"
+    "preview": "node --env-file-if-exists=.env server/index.ts",
+    "start": "node --env-file-if-exists=.env server/index.ts"
   },
+  "engines": { "node": ">=24" },
   "keywords": [],
   "author": "",
   "type": "module",
   "dependencies": {
+    "@fal-ai/client": "^1.10.1",
     "gifenc": "^1.0.3",
+    "posthog-node": "^5.52.0",
     "react": "^19.3.0",
     "react-dom": "^19.3.0"
   },

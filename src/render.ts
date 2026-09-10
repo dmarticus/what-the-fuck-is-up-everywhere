@@ -8,6 +8,11 @@ export interface RenderOptions {
   photo: HTMLImageElement | null
   video: HTMLVideoElement | null
   captions?: boolean
+  useVideo?: boolean
+  startTime?: number
+  frameRate?: number
+  captionColor?: string
+  captionPosition?: 'top' | 'bottom'
 }
 
 function rectangle(context: CanvasRenderingContext2D, color: string, left: number, top: number, width: number, height: number): void {
@@ -196,6 +201,19 @@ function caption(context: CanvasRenderingContext2D, text: string, center: number
   context.fillText(text, center, baseline)
 }
 
+export function drawCaptions(context: CanvasRenderingContext2D, width: number, height: number, options: Pick<RenderOptions, 'address' | 'captionColor' | 'captionPosition'>): void {
+  context.save()
+  const atTop = options.captionPosition === 'top'
+  const shade = context.createLinearGradient(0, atTop ? height * 0.4 : height * 0.6, 0, atTop ? 0 : height)
+  shade.addColorStop(0, 'transparent')
+  shade.addColorStop(1, '#10100ee0')
+  context.fillStyle = shade
+  context.fillRect(0, atTop ? 0 : height * 0.6, width, height * 0.4)
+  caption(context, 'WHAT THE FUCK IS UP,', width / 2, atTop ? 55 : height - 80, width - 38, 46, '#fffdf2')
+  caption(context, `${(options.address || 'DENNY’S').toLocaleUpperCase()}?`, width / 2, atTop ? 111 : height - 24, width - 38, 64, options.captionColor ?? '#e6ff58')
+  context.restore()
+}
+
 export function drawScene(context: CanvasRenderingContext2D, width: number, height: number, time: number, options: RenderOptions): void {
   const phase = time * Math.PI * 2 * options.energy
   context.save()
@@ -209,7 +227,7 @@ export function drawScene(context: CanvasRenderingContext2D, width: number, heig
     context.translate(-width / 2, -height / 2)
     cover(context, options.photo, options.photo.naturalWidth, options.photo.naturalHeight, width, height)
     context.restore()
-  } else if (options.scene === 'diner' && options.video && options.video.readyState >= 2) {
+  } else if ((options.scene === 'diner' || options.useVideo) && options.video && options.video.readyState >= 2) {
     cover(context, options.video, options.video.videoWidth, options.video.videoHeight, width, height)
   } else {
     context.save()
@@ -225,13 +243,7 @@ export function drawScene(context: CanvasRenderingContext2D, width: number, heig
     context.restore()
   }
   if (options.captions !== false) {
-    const shade = context.createLinearGradient(0, height * 0.6, 0, height)
-    shade.addColorStop(0, 'transparent')
-    shade.addColorStop(1, '#10100ee0')
-    context.fillStyle = shade
-    context.fillRect(0, height * 0.6, width, height * 0.4)
-    caption(context, 'WHAT THE FUCK IS UP,', width / 2, height - 80, width - 38, 46, '#fffdf2')
-    caption(context, `${(options.address || 'DENNY’S').toLocaleUpperCase()}?`, width / 2, height - 24, width - 38, 64, '#e6ff58')
+    drawCaptions(context, width, height, options)
   }
   context.restore()
 }
